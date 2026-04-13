@@ -1,5 +1,7 @@
 import { useState } from "react";
 // @ts-ignore
+import CustomCursor from "./components/CustomCursor";
+// @ts-ignore
 import Header from "./components/Header";
 // @ts-ignore
 import HeroSection from "./components/HeroSection";
@@ -25,6 +27,7 @@ export default function App() {
 
   return (
     <div className="mx-auto min-h-screen">
+      <CustomCursor />
       <Header
         mobileMenuOpen={mobileMenuOpen}
         setMobileMenuOpen={setMobileMenuOpen}

@@ -14,23 +14,75 @@
   --font-serif: "Instrument Serif", ui-serif, Georgia, serif;
 }
 
+/* ── Base ── */
 html {
   font-family: var(--font-sans);
   color: var(--color-white);
   background-color: var(--color-black);
   scroll-behavior: smooth;
-  scroll-padding-top: 5.5rem;
+  scroll-padding-top: 5rem;
   overscroll-behavior: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
-@media (min-width: 640px) {
-  html {
-    scroll-padding-top: 6rem;
+@media (min-width: 640px) { html { scroll-padding-top: 5.5rem; } }
+@media (min-width: 1024px) { html { scroll-padding-top: 6rem; } }
+
+/* ── Custom cursor — desktop only ── */
+@media (pointer: fine) {
+  *, *::before, *::after { cursor: none !important; }
+
+  .cursor-dot {
+    position: fixed;
+    top: 0; left: 0;
+    width: 8px; height: 8px;
+    background: #ff6b6b;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 99999;
+    opacity: 0;
+    will-change: transform;
+    transition: opacity 0.2s ease;
+  }
+
+  .cursor-ring {
+    position: fixed;
+    top: 0; left: 0;
+    width: 36px; height: 36px;
+    border: 1.5px solid rgba(255, 107, 107, 0.55);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 99998;
+    opacity: 0;
+    will-change: transform;
+    transition: width 0.25s ease, height 0.25s ease, border-color 0.25s ease, opacity 0.2s ease, margin 0.25s ease;
+  }
+
+  .cursor-ring--hover {
+    width: 54px;
+    height: 54px;
+    border-color: rgba(255, 107, 107, 0.9);
+    margin-left: -9px;
+    margin-top: -9px;
   }
 }
 
-@media (min-width: 1024px) {
-  html {
-    scroll-padding-top: 6.5rem;
-  }
+/* ── Selection ── */
+::selection {
+  background: #ff6b6b;
+  color: #000;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: #000; }
+::-webkit-scrollbar-thumb { background: rgba(255,107,107,0.3); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,107,107,0.6); }
+
+/* ── Badge pulse ── */
+@keyframes badge-pulse {
+  0%,100% { box-shadow: 0 0 0 0 rgba(255,107,107,0.4); }
+  50% { box-shadow: 0 0 0 5px rgba(255,107,107,0); }
 }

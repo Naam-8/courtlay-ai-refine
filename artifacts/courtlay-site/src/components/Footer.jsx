@@ -1,8 +1,5 @@
 import { Instagram, Linkedin, Mail, Twitter } from "lucide-react";
 import { IMAGES } from "../constants";
-import GridBackground from "./GridBackground";
-
-const linkClass = "font-sans text-sm font-medium text-white/90 hover:text-bright-green transition-colors";
 
 const CONTACT_EMAIL = "info@courtlay.com";
 const CONTACT_ADDRESS = "Mumbai, Maharashtra";
@@ -10,6 +7,7 @@ const CONTACT_ADDRESS = "Mumbai, Maharashtra";
 const exploreLinks = [
   { href: "#home", label: "Overview" },
   { href: "#solutions", label: "Platform" },
+  { href: "#court-gallery", label: "Coverage" },
   { href: "#join", label: "Connect" },
 ];
 
@@ -27,85 +25,93 @@ const socialLinks = [
 
 export default function Footer() {
   return (
-    <footer id="footer" className="mx-auto bg-black overflow-hidden relative">
-      <GridBackground />
-      <div className="relative z-10 px-6 py-12 sm:px-10 sm:py-16 lg:px-16 lg:py-20">
-        <div className="flex flex-col gap-12 lg:flex-row lg:justify-between lg:gap-16 lg:items-start pb-12 border-b border-white/10">
-          <div className="max-w-xl space-y-8">
-            <p className="font-serif text-muted italic text-xl">
-              Creating more valuable, more relevant racquet sports broadcasts.
+    <footer id="footer" className="bg-black border-t border-white/[0.06] overflow-hidden">
+      <div className="px-6 pt-16 pb-10 sm:px-10 sm:pt-20 lg:px-16 lg:pt-24 max-w-7xl mx-auto">
+
+        {/* Top section */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 lg:gap-16 pb-12 border-b border-white/[0.07]">
+
+          {/* Brand column */}
+          <div className="lg:col-span-2 flex flex-col gap-8">
+            <p className="font-serif italic text-white/50 text-xl sm:text-2xl leading-relaxed max-w-xl">
+              Creating more valuable, more relevant
+              <br />
+              <span className="text-bright-green/70">racquet sports broadcasts.</span>
             </p>
-            <div className="space-y-6">
+            <div className="flex flex-col gap-4">
               <div>
-                <h4 className="font-sans text-sm font-medium text-muted uppercase tracking-wider mb-2">Company</h4>
-                <p className="font-sans text-white">Courtlay — Virtual advertising for racquet sports.</p>
+                <p className="font-sans text-[10px] tracking-[0.25em] uppercase text-white/25 mb-1">Contact</p>
+                <a
+                  href={`mailto:${CONTACT_EMAIL}`}
+                  className="font-sans text-sm font-medium text-white/70 hover:text-bright-green transition-colors"
+                >
+                  {CONTACT_EMAIL}
+                </a>
               </div>
               <div>
-                <h4 className="font-sans text-sm font-medium text-muted uppercase tracking-wider mb-2">Contact</h4>
-                <ul className="list-none space-y-3 p-0 m-0">
-                  <li>
-                    <a href={`mailto:${CONTACT_EMAIL}`} className={`${linkClass} inline-block max-w-full break-words`}>
-                      {CONTACT_EMAIL}
-                    </a>
-                  </li>
-                  <li>
-                    <address className="font-sans text-white leading-relaxed not-italic">
-                      {CONTACT_ADDRESS}
-                    </address>
-                  </li>
-                </ul>
+                <p className="font-sans text-[10px] tracking-[0.25em] uppercase text-white/25 mb-1">Location</p>
+                <p className="font-sans text-sm text-white/50">{CONTACT_ADDRESS}</p>
               </div>
+            </div>
+            {/* Socials */}
+            <div className="flex items-center gap-5">
+              {socialLinks.map(({ href, label, Icon }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target={href.startsWith("mailto:") ? undefined : "_blank"}
+                  rel={href.startsWith("mailto:") ? undefined : "noopener noreferrer"}
+                  className="text-white/30 hover:text-bright-green transition-colors"
+                  aria-label={label}
+                >
+                  <Icon size={18} />
+                </a>
+              ))}
             </div>
           </div>
 
-          <div className="flex flex-col gap-10">
-            <div>
-              <h4 className="font-sans text-sm font-medium text-muted uppercase tracking-wider mb-4">Explore</h4>
-              <nav className="flex flex-wrap gap-x-6 gap-y-2">
-                {exploreLinks.map(({ href, label }) => (
-                  <a key={href} href={href} className={linkClass}>{label}</a>
-                ))}
-              </nav>
-            </div>
-
-            <div>
-              <h4 className="font-sans text-sm font-medium text-muted uppercase tracking-wider mb-4">Connect with us</h4>
-              <nav className="flex flex-wrap items-center gap-6">
-                {socialLinks.map(({ href, label, Icon }) => (
-                  <a
-                    key={label}
-                    href={href}
-                    target={href.startsWith("mailto:") ? undefined : "_blank"}
-                    rel={href.startsWith("mailto:") ? undefined : "noopener noreferrer"}
-                    className="inline-flex text-white/90 hover:text-bright-green transition-colors"
-                    aria-label={label}
-                  >
-                    <Icon size={20} />
-                  </a>
-                ))}
-              </nav>
-            </div>
+          {/* Nav column */}
+          <div className="flex flex-col gap-2">
+            <p className="font-sans text-[10px] tracking-[0.25em] uppercase text-white/25 mb-3">Navigate</p>
+            {exploreLinks.map(({ href, label }) => (
+              <a
+                key={href}
+                href={href}
+                className="font-sans text-sm font-medium text-white/55 hover:text-white transition-colors py-1 w-fit group flex items-center gap-2"
+              >
+                <span className="w-3 h-px bg-bright-green/0 group-hover:bg-bright-green/60 transition-all duration-300" />
+                {label}
+              </a>
+            ))}
           </div>
         </div>
 
-        <a href="/" className="block">
-          <img src={IMAGES.logo} alt="Courtlay" className="w-full h-32 pt-10 object-contain object-center" />
-        </a>
+        {/* Large logo */}
+        <div className="py-10 border-b border-white/[0.07]">
+          <a href="/">
+            <img
+              src={IMAGES.logo}
+              alt="Courtlay"
+              className="w-full max-w-2xl mx-auto h-20 sm:h-28 object-contain object-center opacity-20 hover:opacity-30 transition-opacity duration-500"
+            />
+          </a>
+        </div>
 
-        <div className="mt-10 pt-8 border-t border-white/10">
-          <div className="flex w-full flex-col gap-8 md:flex-row md:items-center md:justify-between">
-            <p className="font-sans text-sm text-muted text-center md:text-left">
-              © {new Date().getFullYear()} Courtlay. All rights reserved.
-            </p>
-            <nav className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 md:justify-end">
-              {legalLinks.map(({ href, label }, i) => (
-                <span key={href} className="inline-flex items-center gap-x-3">
-                  {i > 0 && <span className="text-muted select-none" aria-hidden>|</span>}
-                  <a href={href} className={linkClass}>{label}</a>
-                </span>
-              ))}
-            </nav>
-          </div>
+        {/* Bottom bar */}
+        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="font-sans text-xs text-white/20">
+            © {new Date().getFullYear()} Courtlay. All rights reserved.
+          </p>
+          <nav className="flex items-center gap-4">
+            {legalLinks.map(({ href, label }, i) => (
+              <span key={href} className="inline-flex items-center gap-4">
+                {i > 0 && <span className="text-white/15 select-none">·</span>}
+                <a href={href} className="font-sans text-xs text-white/25 hover:text-white/60 transition-colors">
+                  {label}
+                </a>
+              </span>
+            ))}
+          </nav>
         </div>
       </div>
     </footer>
