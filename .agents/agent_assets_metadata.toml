@@ -1,0 +1,38 @@
+uploads = []
+outputs = []
+
+[[generated]]
+id = "1lLIpc0j1kF-p5uh3QKUK"
+uri = "file://artifacts/courtlay-site/public/sports/tennis.png"
+type = "image"
+title = "tennis player action"
+
+[[generated]]
+id = "kKRhdDD_cT8k_VpRFDZv4"
+uri = "file://artifacts/courtlay-site/public/sports/padel.png"
+type = "image"
+title = "padel player smash"
+
+[[generated]]
+id = "WcYpHO_r7B3UOSiRzQvkX"
+uri = "file://artifacts/courtlay-site/public/sports/squash.png"
+type = "image"
+title = "squash player lunge"
+
+[[generated]]
+id = "T_5JMKolTSCg9eigEpeSR"
+uri = "file://artifacts/courtlay-site/public/sports/tabletennis.png"
+type = "image"
+title = "table tennis spin"
+
+[[generated]]
+id = "IIOARNV6ROWz-dyh9yH41"
+uri = "file://artifacts/courtlay-site/public/sports/badminton.png"
+type = "image"
+title = "badminton jump smash"
+
+[[generated]]
+id = "J3oBSQqVjjA12an4NQKvD"
+uri = "file://artifacts/courtlay-site/public/sports/pickleball.png"
+type = "image"
+title = "pickleball dink shot"
