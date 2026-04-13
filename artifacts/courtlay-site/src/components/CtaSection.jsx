@@ -123,22 +123,6 @@ export default function CtaSection() {
           </a>
         </div>
 
-        {/* Decorative stats row */}
-        <div
-          className="cta-el mt-20 pt-10 border-t border-white/[0.06] grid grid-cols-3 gap-8 max-w-2xl mx-auto"
-          style={{ animationDelay: "0.48s" }}
-        >
-          {[
-            { val: "6+", label: "Racquet sports" },
-            { val: "40+", label: "Venues covered" },
-            { val: "100M+", label: "Broadcast viewers" },
-          ].map(({ val, label }) => (
-            <div key={label} className="flex flex-col items-center gap-1">
-              <p className="font-sans text-2xl sm:text-3xl font-bold text-bright-green">{val}</p>
-              <p className="font-sans text-[10px] tracking-[0.2em] uppercase text-white/35">{label}</p>
-            </div>
-          ))}
-        </div>
       </div>
 
       {/* Bottom border */}
