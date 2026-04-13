@@ -1,47 +1,24 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { IMAGES } from "../constants";
 import GridBackground from "./GridBackground";
 
 const SPORTS = ["Tennis", "Padel", "Squash", "Table Tennis", "Badminton", "Pickleball"];
 
-const CARDS = [
-  {
-    image: "padel",
-    sport: "Padel",
-    tag: "01",
-    detail: "Active globally",
-    caption: "Live match broadcast integration — court surfaces ready for virtual logo placement",
-  },
-  {
-    image: "openCourt",
-    sport: "Squash · Table Tennis",
-    tag: "02",
-    detail: "In development",
-    caption: "Sports-specific surface intelligence built for racquet sport environments",
-  },
-];
-
-const STATS = [
-  { value: "6", label: "Racquet sports" },
-  { value: "Live", label: "Match integration" },
-  { value: "360°", label: "Surface coverage" },
+const FEATURES = [
+  { label: "Real-time surface mapping", desc: "Every court zone identified and tracked across each frame of the live feed." },
+  { label: "Multi-sport adaptability", desc: "From padel glass walls to squash backboards — each sport's geometry understood natively." },
+  { label: "Regional feed splitting", desc: "One match, many markets. Different sponsors per territory, synchronized to play." },
 ];
 
 function Marquee() {
   const repeated = [...SPORTS, ...SPORTS, ...SPORTS, ...SPORTS];
   return (
-    <div className="relative overflow-hidden py-5 border-y border-white/[0.07] my-10 sm:my-14">
-      {/* Left fade */}
+    <div className="relative overflow-hidden py-5 border-y border-white/[0.07]">
       <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-24 z-10 bg-gradient-to-r from-black to-transparent" />
-      {/* Right fade */}
       <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-24 z-10 bg-gradient-to-l from-black to-transparent" />
-
       <div
         className="flex gap-0 whitespace-nowrap"
-        style={{
-          animation: "marquee-scroll 22s linear infinite",
-          width: "max-content",
-        }}
+        style={{ animation: "marquee-scroll 22s linear infinite", width: "max-content" }}
       >
         {repeated.map((sport, i) => (
           <span key={i} className="inline-flex items-center">
@@ -60,8 +37,7 @@ export default function SportsCoverageSection() {
   const sectionRef = useRef(null);
 
   useEffect(() => {
-    // Inject keyframe if not present
-    const id = "marquee-keyframe";
+    const id = "sports-keyframes";
     if (!document.getElementById(id)) {
       const style = document.createElement("style");
       style.id = id;
@@ -70,36 +46,50 @@ export default function SportsCoverageSection() {
           from { transform: translateX(0); }
           to { transform: translateX(-50%); }
         }
-        @keyframes fade-up {
-          from { opacity: 0; transform: translateY(28px); }
-          to { opacity: 1; transform: translateY(0); }
+        @keyframes card-in-back {
+          from { opacity: 0; transform: rotate(-10deg) translate(-60px, 60px) scale(0.88); }
+          to   { opacity: 1; transform: rotate(-7deg)  translate(-28px, 36px) scale(0.91); }
         }
-        .sport-card-img {
-          transition: transform 0.75s cubic-bezier(0.22,1,0.36,1);
+        @keyframes card-in-mid {
+          from { opacity: 0; transform: rotate(0deg) translate(-30px, 20px) scale(0.9); }
+          to   { opacity: 1; transform: rotate(-2deg) translate(-12px, 16px) scale(0.95); }
         }
-        .sport-card:hover .sport-card-img {
-          transform: scale(1.065);
+        @keyframes card-in-front {
+          from { opacity: 0; transform: rotate(6deg) translate(30px, -20px) scale(0.9); }
+          to   { opacity: 1; transform: rotate(3deg)  translate(10px,  -8px) scale(1); }
         }
-        .sport-card-line {
-          width: 24px;
-          transition: width 0.5s ease, background-color 0.5s ease;
+        @keyframes text-reveal {
+          from { opacity: 0; transform: translateY(24px); }
+          to   { opacity: 1; transform: translateY(0); }
         }
-        .sport-card:hover .sport-card-line {
-          width: 48px;
+        @keyframes line-grow {
+          from { width: 0; opacity: 0; }
+          to   { width: 40px; opacity: 1; }
+        }
+        .stack-card-back  { opacity: 0; }
+        .stack-card-mid   { opacity: 0; }
+        .stack-card-front { opacity: 0; }
+        .stack-card-back.animated  { animation: card-in-back  0.8s cubic-bezier(0.22,1,0.36,1) 0.1s forwards; }
+        .stack-card-mid.animated   { animation: card-in-mid   0.8s cubic-bezier(0.22,1,0.36,1) 0.25s forwards; }
+        .stack-card-front.animated { animation: card-in-front 0.8s cubic-bezier(0.22,1,0.36,1) 0.42s forwards; }
+        .reveal-text { opacity: 0; }
+        .reveal-text.animated { animation: text-reveal 0.7s cubic-bezier(0.22,1,0.36,1) forwards; }
+        .reveal-line { width: 0; opacity: 0; }
+        .reveal-line.animated { animation: line-grow 0.6s cubic-bezier(0.22,1,0.36,1) forwards; }
+
+        .feature-row {
+          transition: border-color 0.25s ease;
+          border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+        .feature-row:hover {
+          border-color: rgba(255,107,107,0.25);
+        }
+        .feature-dot {
+          transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+        .feature-row:hover .feature-dot {
+          transform: scale(1.4);
           background-color: rgb(255 107 107);
-        }
-        .sport-card-hint {
-          opacity: 0;
-          transition: opacity 0.4s ease;
-        }
-        .sport-card:hover .sport-card-hint {
-          opacity: 0.4;
-        }
-        .sport-card-ring {
-          transition: box-shadow 0.4s ease;
-        }
-        .sport-card:hover .sport-card-ring {
-          box-shadow: inset 0 0 0 1px rgba(255,107,107,0.35);
         }
       `;
       document.head.appendChild(style);
@@ -109,164 +99,194 @@ export default function SportsCoverageSection() {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            entry.target
-              .querySelectorAll("[data-reveal]")
-              .forEach((el, i) => {
-                const delay = Number(el.dataset.delay ?? i * 100);
-                setTimeout(() => {
-                  el.style.animation = `fade-up 0.65s cubic-bezier(0.22,1,0.36,1) forwards`;
-                }, delay);
-              });
-            observer.unobserve(entry.target);
+            const el = entry.target;
+            // Animate stack cards
+            el.querySelectorAll(".stack-card-back, .stack-card-mid, .stack-card-front").forEach((card) => {
+              card.classList.add("animated");
+            });
+            // Animate text elements with staggered delays
+            el.querySelectorAll(".reveal-text").forEach((t, i) => {
+              t.style.animationDelay = `${0.55 + i * 0.12}s`;
+              t.classList.add("animated");
+            });
+            el.querySelectorAll(".reveal-line").forEach((l) => {
+              l.style.animationDelay = "0.6s";
+              l.classList.add("animated");
+            });
+            observer.unobserve(el);
           }
         });
       },
-      { threshold: 0.07 }
+      { threshold: 0.1 }
     );
     if (sectionRef.current) observer.observe(sectionRef.current);
     return () => observer.disconnect();
   }, []);
 
-  const hidden = { opacity: 0, transform: "translateY(28px)" };
-
   return (
-    <section
-      id="court-gallery"
-      ref={sectionRef}
-      className="bg-black overflow-hidden relative"
-    >
+    <section id="court-gallery" className="bg-black overflow-hidden relative">
       <GridBackground />
 
-      <div className="relative z-10 px-4 pt-16 pb-20 sm:px-6 sm:pt-20 sm:pb-24 lg:px-16 lg:pt-28 lg:pb-32 max-w-7xl mx-auto">
+      <div className="relative z-10 max-w-7xl mx-auto">
 
-        {/* ── Header ── */}
-        <div data-reveal data-delay="0" style={hidden}>
-          <span className="font-sans text-[10px] tracking-[0.3em] uppercase text-bright-green/60 mb-5 block">
-            Racquet sports covered
-          </span>
-          <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4 lg:gap-10">
-            <h2 className="font-sans text-5xl sm:text-6xl lg:text-7xl font-bold text-white leading-none">
-              Courtlay{" "}
-              <span className="font-serif italic text-bright-green">at work</span>
-            </h2>
-            <p className="font-sans text-muted text-base sm:text-lg max-w-sm leading-relaxed lg:text-right lg:pb-1 lg:shrink-0">
-              Real court environments across racquet sports —{" "}
-              seamlessly enhanced for broadcast.
-            </p>
-          </div>
-        </div>
-
-        {/* ── Sports ticker marquee ── */}
-        <div data-reveal data-delay="100" style={hidden}>
+        {/* ── Ticker ── */}
+        <div className="pt-14 sm:pt-18 lg:pt-22">
           <Marquee />
         </div>
 
-        {/* ── Card grid ── */}
+        {/* ── Main split layout ── */}
         <div
-          data-reveal
-          data-delay="200"
-          style={hidden}
-          className="grid grid-cols-1 lg:grid-cols-5 gap-3 sm:gap-4"
+          ref={sectionRef}
+          className="px-4 pt-16 pb-20 sm:px-6 sm:pt-20 sm:pb-28 lg:px-16 lg:pt-24 lg:pb-32
+                     grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-20 items-center"
         >
-          {/* Large card */}
-          <div
-            className="sport-card group lg:col-span-3 relative rounded-2xl overflow-hidden cursor-pointer"
-            style={{ height: "clamp(260px, 40vw, 520px)" }}
-          >
-            <div className="sport-card-ring absolute inset-0 z-10 rounded-2xl pointer-events-none" />
-            <img
-              src={IMAGES[CARDS[0].image]}
-              alt={CARDS[0].sport}
-              className="sport-card-img w-full h-full object-cover"
+
+          {/* Left — stacked cards */}
+          <div className="relative flex items-center justify-center" style={{ minHeight: "420px" }}>
+
+            {/* Back card */}
+            <div
+              className="stack-card-back absolute w-[78%] sm:w-[72%] rounded-2xl overflow-hidden shadow-2xl"
+              style={{ transformOrigin: "bottom center", zIndex: 1 }}
+            >
+              <div className="relative" style={{ paddingBottom: "68%" }}>
+                <img
+                  src={IMAGES.openCourt}
+                  alt="Court"
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-black/60" />
+              </div>
+            </div>
+
+            {/* Mid card */}
+            <div
+              className="stack-card-mid absolute w-[78%] sm:w-[72%] rounded-2xl overflow-hidden shadow-2xl"
+              style={{ transformOrigin: "bottom center", zIndex: 2 }}
+            >
+              <div className="relative" style={{ paddingBottom: "68%" }}>
+                <img
+                  src={IMAGES.padel}
+                  alt="Padel"
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-black/40" />
+              </div>
+            </div>
+
+            {/* Front card — fully visible, with badge */}
+            <div
+              className="stack-card-front relative w-[78%] sm:w-[72%] rounded-2xl overflow-hidden shadow-[0_32px_80px_rgba(0,0,0,0.8)] border border-white/10"
+              style={{ transformOrigin: "bottom center", zIndex: 3 }}
+            >
+              <div className="relative" style={{ paddingBottom: "68%" }}>
+                <img
+                  src={IMAGES.openCourt}
+                  alt="Court environment"
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+                {/* Gradient */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+
+                {/* Badge */}
+                <div className="absolute top-4 left-4">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-bright-green text-black font-sans text-[10px] font-bold tracking-[0.15em] uppercase">
+                    <span className="w-1.5 h-1.5 rounded-full bg-black/40 inline-block" />
+                    Live ready
+                  </span>
+                </div>
+
+                {/* Bottom label */}
+                <div className="absolute bottom-0 left-0 right-0 p-5">
+                  <p className="font-sans text-[10px] tracking-[0.2em] uppercase text-bright-green font-bold mb-1">
+                    Padel · Squash · Table Tennis
+                  </p>
+                  <p className="font-sans text-white text-sm font-medium leading-snug max-w-[240px]">
+                    Every surface, mapped for broadcast-native brand integration
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Decorative glow beneath */}
+            <div
+              className="absolute bottom-0 left-1/2 -translate-x-1/2 w-48 h-24 rounded-full blur-3xl pointer-events-none"
+              style={{ background: "rgba(255,107,107,0.12)", zIndex: 0 }}
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
-            <div className="absolute inset-0 bg-gradient-to-r from-black/55 via-transparent to-transparent" />
-
-            {/* Ghost number */}
-            <div className="absolute top-6 right-7 font-sans text-8xl font-black text-white/[0.05] select-none leading-none">
-              {CARDS[0].tag}
-            </div>
-
-            <div className="absolute bottom-0 left-0 right-0 p-7 sm:p-9">
-              <div className="flex items-center gap-3 mb-2.5">
-                <span className="font-sans text-[10px] tracking-[0.25em] uppercase text-bright-green font-bold">
-                  {CARDS[0].sport}
-                </span>
-                <span className="font-sans text-[10px] text-white/30">
-                  — {CARDS[0].detail}
-                </span>
-              </div>
-              <p className="font-sans text-white text-lg sm:text-xl font-semibold max-w-sm leading-snug">
-                {CARDS[0].caption}
-              </p>
-              <div className="mt-5 flex items-center gap-3">
-                <div className="sport-card-line h-px bg-bright-green/35" />
-                <span className="sport-card-hint font-sans text-[10px] tracking-widest uppercase text-white">
-                  Explore
-                </span>
-              </div>
-            </div>
           </div>
 
-          {/* Small card */}
-          <div
-            className="sport-card group lg:col-span-2 relative rounded-2xl overflow-hidden cursor-pointer"
-            style={{ height: "clamp(220px, 32vw, 520px)" }}
-          >
-            <div className="sport-card-ring absolute inset-0 z-10 rounded-2xl pointer-events-none" />
-            <img
-              src={IMAGES[CARDS[1].image]}
-              alt={CARDS[1].sport}
-              className="sport-card-img w-full h-full object-cover"
+          {/* Right — text content */}
+          <div className="flex flex-col gap-8">
+
+            {/* Overline */}
+            <div
+              className="reveal-line h-px bg-bright-green"
+              style={{ width: 0 }}
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
 
-            {/* Ghost number */}
-            <div className="absolute top-6 right-7 font-sans text-8xl font-black text-white/[0.05] select-none leading-none">
-              {CARDS[1].tag}
-            </div>
-
-            <div className="absolute bottom-0 left-0 right-0 p-7 sm:p-9">
-              <div className="flex items-center gap-3 mb-2.5">
-                <span className="font-sans text-[10px] tracking-[0.25em] uppercase text-bright-green font-bold">
-                  {CARDS[1].sport}
-                </span>
-                <span className="font-sans text-[10px] text-white/30">
-                  — {CARDS[1].detail}
-                </span>
-              </div>
-              <p className="font-sans text-white text-base sm:text-lg font-semibold max-w-xs leading-snug">
-                {CARDS[1].caption}
+            {/* Heading */}
+            <div>
+              <p className="reveal-text font-sans text-[10px] tracking-[0.3em] uppercase text-bright-green/60 mb-4">
+                Built for every court
               </p>
-              <div className="mt-5 flex items-center gap-3">
-                <div className="sport-card-line h-px bg-bright-green/35" />
-                <span className="sport-card-hint font-sans text-[10px] tracking-widest uppercase text-white">
-                  Explore
-                </span>
-              </div>
+              <h2
+                className="reveal-text font-sans text-4xl sm:text-5xl lg:text-[3.25rem] font-bold text-white leading-[1.1]"
+                style={{ animationDelay: "0.62s" }}
+              >
+                Virtual advertising{" "}
+                <span className="font-serif italic text-bright-green">across</span>{" "}
+                every racquet sport
+              </h2>
             </div>
+
+            {/* Description */}
+            <p
+              className="reveal-text font-sans text-muted text-base sm:text-lg leading-relaxed max-w-md"
+              style={{ animationDelay: "0.72s" }}
+            >
+              Courtlay's surface intelligence adapts to the unique geometry of
+              each racquet sport — glass, mesh, baseline, backboard — turning
+              every venue into a precision ad platform.
+            </p>
+
+            {/* Feature rows */}
+            <div className="flex flex-col">
+              {FEATURES.map((f, i) => (
+                <div
+                  key={f.label}
+                  className="reveal-text feature-row flex items-start gap-4 py-4 cursor-default"
+                  style={{ animationDelay: `${0.82 + i * 0.1}s` }}
+                >
+                  <div className="feature-dot mt-1.5 w-2 h-2 rounded-full bg-bright-green/50 shrink-0" />
+                  <div>
+                    <p className="font-sans text-sm font-bold text-white mb-0.5">{f.label}</p>
+                    <p className="font-sans text-xs text-white/45 leading-relaxed">{f.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* CTA */}
+            <div
+              className="reveal-text"
+              style={{ animationDelay: "1.12s" }}
+            >
+              <a
+                href="#join"
+                className="inline-flex items-center gap-3 group"
+              >
+                <span className="font-sans text-sm font-semibold text-bright-green group-hover:text-light-green transition-colors">
+                  Talk to our team
+                </span>
+                <span
+                  className="h-px bg-bright-green/50 transition-all duration-400 group-hover:w-10 group-hover:bg-bright-green"
+                  style={{ width: "24px" }}
+                />
+              </a>
+            </div>
+
           </div>
         </div>
-
-        {/* ── Stats strip ── */}
-        <div
-          data-reveal
-          data-delay="320"
-          style={hidden}
-          className="mt-10 sm:mt-12 pt-9 border-t border-white/[0.07] grid grid-cols-3 gap-4"
-        >
-          {STATS.map((stat) => (
-            <div key={stat.label} className="text-center group/s">
-              <div className="font-sans text-3xl sm:text-4xl lg:text-5xl font-bold text-bright-green tabular-nums transition-transform duration-300 group-hover/s:scale-105 inline-block">
-                {stat.value}
-              </div>
-              <div className="mt-2 font-sans text-xs sm:text-sm text-muted tracking-wide uppercase">
-                {stat.label}
-              </div>
-            </div>
-          ))}
-        </div>
-
       </div>
     </section>
   );
