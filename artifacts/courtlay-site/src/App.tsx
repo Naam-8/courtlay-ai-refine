@@ -6,11 +6,9 @@ import HeroSection from "./components/HeroSection";
 // @ts-ignore
 import AdPlacementSection from "./components/AdPlacementSection";
 // @ts-ignore
-import SportsLogosSection from "./components/SportsLogosSection";
+import SportsCoverageSection from "./components/SportsCoverageSection";
 // @ts-ignore
 import VirtualAdsSection from "./components/VirtualAdsSection";
-// @ts-ignore
-import CourtGallerySection from "./components/CourtGallerySection";
 // @ts-ignore
 import FaqSection from "./components/FaqSection";
 // @ts-ignore
@@ -39,9 +37,8 @@ export default function App() {
       </div>
 
       <AdPlacementSection />
-      <SportsLogosSection />
+      <SportsCoverageSection />
       <VirtualAdsSection />
-      <CourtGallerySection />
       <FaqSection />
       <CtaSection />
       <MemberFormSection />
