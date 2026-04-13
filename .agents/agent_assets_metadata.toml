@@ -36,3 +36,33 @@ id = "J3oBSQqVjjA12an4NQKvD"
 uri = "file://artifacts/courtlay-site/public/sports/pickleball.png"
 type = "image"
 title = "pickleball dink shot"
+
+[[generated]]
+id = "g-DtZ0-L_Qoj0URPdFIV0"
+uri = "file://artifacts/courtlay-site/public/linkedin-covers/cover-1.png"
+type = "image"
+title = "courtlay cover 1 court lines"
+
+[[generated]]
+id = "e7Qo0Fzw4b8iwK_kA5KkH"
+uri = "file://artifacts/courtlay-site/public/linkedin-covers/cover-2.png"
+type = "image"
+title = "courtlay cover 2 broadcast signal"
+
+[[generated]]
+id = "_3RXZtzE-_rM6CuoxK8ID"
+uri = "file://artifacts/courtlay-site/public/linkedin-covers/cover-3.png"
+type = "image"
+title = "courtlay cover 3 tech overlay POV"
+
+[[generated]]
+id = "kV_w6GAgnBqqUWk54A_nU"
+uri = "file://artifacts/courtlay-site/public/linkedin-covers/cover-4.png"
+type = "image"
+title = "courtlay cover 4 red slash typography"
+
+[[generated]]
+id = "EhwVliR6ABb30nG1OBcCu"
+uri = "file://artifacts/courtlay-site/public/linkedin-covers/cover-5.png"
+type = "image"
+title = "courtlay cover 5 global courts network"
