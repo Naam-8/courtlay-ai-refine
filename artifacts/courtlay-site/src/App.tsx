@@ -4,7 +4,7 @@ import Header from "./components/Header";
 // @ts-ignore
 import HeroSection from "./components/HeroSection";
 // @ts-ignore
-import GameSection from "./components/GameSection";
+import AdPlacementSection from "./components/AdPlacementSection";
 // @ts-ignore
 import SportsLogosSection from "./components/SportsLogosSection";
 // @ts-ignore
@@ -38,7 +38,7 @@ export default function App() {
         </div>
       </div>
 
-      <GameSection />
+      <AdPlacementSection />
       <SportsLogosSection />
       <VirtualAdsSection />
       <CourtGallerySection />
