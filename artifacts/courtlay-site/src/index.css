@@ -2,13 +2,13 @@
 @import "tw-animate-css";
 
 @theme {
-  --color-bright-green: #ff6b6b;
-  --color-light-green: #ffb3b3;
-  --color-dark-green: #7a1f1f;
+  --color-bright-green: #e8192c;
+  --color-light-green: #ff5566;
+  --color-dark-green: #6b0010;
   --color-white: #ffffff;
   --color-black: #000000;
   --color-muted: #cccccc;
-  --color-bg-pale: #ffb3b3;
+  --color-bg-pale: #ff5566;
 
   --font-sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
   --font-serif: "Instrument Serif", ui-serif, Georgia, serif;
