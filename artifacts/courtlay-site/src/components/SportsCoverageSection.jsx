@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState, useCallback } from "react";
-import GridBackground from "./GridBackground";
 
 const SPORTS_TICKER = ["Tennis", "Padel", "Squash", "Table Tennis", "Badminton", "Pickleball"];
 
@@ -39,7 +38,7 @@ const SPORTS = [
   {
     name: "Badminton",
     tag: "Indoor court",
-    status: "In development",
+    status: "Coming Soon",
     caption: "Court lines, net zone and back-court banners covered",
     image: "/sports/badminton.png",
     color: "#34d399",
@@ -47,7 +46,7 @@ const SPORTS = [
   {
     name: "Pickleball",
     tag: "Outdoor · Indoor",
-    status: "In development",
+    status: "Coming Soon",
     caption: "Kitchen line, baseline and sideline zones precision-mapped",
     image: "/sports/pickleball.png",
     color: "#fb923c",
@@ -65,19 +64,19 @@ const INTERVAL_MS = 3800;
 function Marquee() {
   const repeated = [...SPORTS_TICKER, ...SPORTS_TICKER, ...SPORTS_TICKER, ...SPORTS_TICKER];
   return (
-    <div className="relative overflow-hidden py-5 border-y border-white/[0.07]">
-      <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-24 z-10 bg-gradient-to-r from-black to-transparent" />
-      <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-24 z-10 bg-gradient-to-l from-black to-transparent" />
+    <div className="relative overflow-hidden py-5" style={{ borderTop: "1px solid rgba(0,0,0,0.08)", borderBottom: "1px solid rgba(0,0,0,0.08)" }}>
+      <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-24 z-10" style={{ background: "linear-gradient(to right, #f2f2f0, transparent)" }} />
+      <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-24 z-10" style={{ background: "linear-gradient(to left, #f2f2f0, transparent)" }} />
       <div
         className="flex gap-0 whitespace-nowrap"
         style={{ animation: "marquee-scroll 22s linear infinite", width: "max-content" }}
       >
         {repeated.map((sport, i) => (
           <span key={i} className="inline-flex items-center">
-            <span className="font-sans text-sm sm:text-base font-semibold tracking-[0.06em] text-white/25 px-6 sm:px-8 uppercase">
+            <span className="font-sans text-sm sm:text-base font-semibold tracking-[0.06em] px-6 sm:px-8 uppercase" style={{ color: "rgba(13,13,13,0.25)" }}>
               {sport}
             </span>
-            <span className="text-bright-green/40 text-xs select-none">✦</span>
+            <span className="text-xs select-none" style={{ color: "rgba(232,25,44,0.4)" }}>✦</span>
           </span>
         ))}
       </div>
@@ -154,42 +153,19 @@ function SportImageShowcase() {
           style={{ zIndex: 2, animation: "img-fade-in 0.7s ease forwards" }}
         />
 
-        {/* Dark gradient overlay */}
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{ background: "linear-gradient(to top, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.15) 55%, rgba(0,0,0,0.0) 100%)", zIndex: 3 }}
-        />
 
-        {/* Top-left badge */}
-        <div className="absolute top-4 left-4 z-10">
+        {/* Coming Soon badge — all sports */}
+        <div className="absolute top-4 left-4" style={{ zIndex: 10 }}>
           <span
             className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[10px] font-bold font-sans tracking-[0.18em] uppercase"
-            style={{ background: "rgba(0,0,0,0.55)", backdropFilter: "blur(8px)", border: "1px solid rgba(255,255,255,0.12)", color: "#fff" }}
+            style={{ background: "rgba(0,0,0,0.55)", backdropFilter: "blur(8px)", border: "1px solid rgba(255,255,255,0.15)", color: "#fff" }}
           >
             <span
               className="w-1.5 h-1.5 rounded-full inline-block"
               style={{ background: sport.color, boxShadow: `0 0 6px ${sport.color}` }}
             />
-            {sport.status}
+            Coming Soon
           </span>
-        </div>
-
-        {/* Bottom overlay text */}
-        <div className="absolute bottom-0 left-0 right-0 z-10 p-5">
-          <p
-            className="font-sans text-[10px] tracking-[0.22em] uppercase font-bold mb-2"
-            style={{ color: sport.color, animation: "caption-in 0.5s ease forwards" }}
-            key={`tag-${activeIdx}`}
-          >
-            {sport.name} · {sport.tag}
-          </p>
-          <p
-            className="font-sans text-white text-sm font-medium leading-snug max-w-[300px]"
-            style={{ animation: "caption-in 0.5s ease 0.08s both" }}
-            key={`cap-${activeIdx}`}
-          >
-            {sport.caption}
-          </p>
         </div>
 
         {/* Progress bar */}
@@ -231,75 +207,36 @@ export default function SportsCoverageSection() {
 
   useEffect(() => {
     const id = "sports-keyframes";
-    if (!document.getElementById(id)) {
-      const style = document.createElement("style");
-      style.id = id;
-      style.textContent = `
-        @keyframes marquee-scroll {
-          from { transform: translateX(0); }
-          to   { transform: translateX(-50%); }
-        }
-        @keyframes img-fade-in {
-          from { opacity: 0; transform: scale(1.04); }
-          to   { opacity: 1; transform: scale(1); }
-        }
-        @keyframes img-fade-out {
-          from { opacity: 1; transform: scale(1); }
-          to   { opacity: 0; transform: scale(0.97); }
-        }
-        @keyframes caption-in {
-          from { opacity: 0; transform: translateY(10px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes text-reveal {
-          from { opacity: 0; transform: translateY(22px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes line-grow {
-          from { width: 0; opacity: 0; }
-          to   { width: 40px; opacity: 1; }
-        }
-        .reveal-text { opacity: 0; }
-        .reveal-text.animated { animation: text-reveal 0.7s cubic-bezier(0.22,1,0.36,1) forwards; }
-        .reveal-line { width: 0; opacity: 0; }
-        .reveal-line.animated { animation: line-grow 0.6s cubic-bezier(0.22,1,0.36,1) forwards; }
-        .feature-row {
-          transition: border-color 0.25s ease;
-          border-bottom: 1px solid rgba(255,255,255,0.06);
-        }
-        .feature-row:hover { border-color: rgba(255,107,107,0.25); }
-        .feature-dot { transition: transform 0.3s ease, background-color 0.3s ease; }
-        .feature-row:hover .feature-dot { transform: scale(1.4); background-color: rgb(255 107 107); }
-      `;
-      document.head.appendChild(style);
-    }
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.querySelectorAll(".reveal-text").forEach((t, i) => {
-              t.style.animationDelay = `${0.1 + i * 0.1}s`;
-              t.classList.add("animated");
-            });
-            entry.target.querySelectorAll(".reveal-line").forEach((l) => {
-              l.style.animationDelay = "0.1s";
-              l.classList.add("animated");
-            });
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-    if (sectionRef.current) observer.observe(sectionRef.current);
-    return () => observer.disconnect();
+    // Remove stale version so we always get fresh styles
+    const existing = document.getElementById(id);
+    if (existing) existing.remove();
+    const style = document.createElement("style");
+    style.id = id;
+    style.textContent = `
+      @keyframes marquee-scroll {
+        from { transform: translateX(0); }
+        to   { transform: translateX(-50%); }
+      }
+      @keyframes img-fade-in {
+        from { opacity: 0; transform: scale(1.04); }
+        to   { opacity: 1; transform: scale(1); }
+      }
+      @keyframes img-fade-out {
+        from { opacity: 1; transform: scale(1); }
+        to   { opacity: 0; transform: scale(0.97); }
+      }
+      @keyframes caption-in {
+        from { opacity: 0; transform: translateY(10px); }
+        to   { opacity: 1; transform: translateY(0); }
+      }
+      .feature-dot { transition: transform 0.3s ease, background-color 0.3s ease; }
+      .feature-row:hover .feature-dot { transform: scale(1.4); background-color: #e8192c; }
+    `;
+    document.head.appendChild(style);
   }, []);
 
   return (
-    <section id="court-gallery" className="bg-black overflow-hidden relative">
-      <GridBackground />
-
+    <section id="court-gallery" className="overflow-hidden relative" style={{ background: "#f2f2f0" }}>
       <div className="relative z-10 max-w-7xl mx-auto">
         {/* Ticker */}
         <div className="pt-14 sm:pt-18 lg:pt-22">
@@ -317,48 +254,47 @@ export default function SportsCoverageSection() {
 
           {/* Right — text content */}
           <div className="flex flex-col gap-8 lg:pt-4">
-            <div className="reveal-line h-px bg-bright-green" style={{ width: 0 }} />
+            <div className="h-px" style={{ width: "40px", background: "#e8192c" }} />
 
             <div>
-              <p className="reveal-text font-sans text-[10px] tracking-[0.3em] uppercase text-bright-green/60 mb-4">
+              <p className="font-sans text-[10px] tracking-[0.3em] uppercase mb-4" style={{ color: "#e8192c" }}>
                 Built for every court
               </p>
-              <h2 className="reveal-text font-sans text-4xl sm:text-5xl lg:text-[3.25rem] font-bold text-white leading-[1.1]">
+              <h2 className="font-sans text-4xl sm:text-5xl lg:text-[3.25rem] font-bold leading-[1.1]" style={{ color: "#0d0d0d" }}>
                 Virtual advertising{" "}
-                <span className="font-serif italic text-bright-green">across</span>{" "}
+                <span style={{ color: "#e8192c" }}>across</span>{" "}
                 every racquet sport
               </h2>
             </div>
 
-            <p className="reveal-text font-sans text-muted text-base sm:text-lg leading-relaxed max-w-md">
-              Courtlay's surface intelligence adapts to the unique geometry of
-              each racquet sport — glass, mesh, baseline, backboard — turning
-              every venue into a precision ad platform.
+            <p className="font-sans text-base sm:text-lg leading-relaxed max-w-md" style={{ color: "rgba(13,13,13,0.55)" }}>
+              Whether you broadcast padel, tennis, squash or pickleball — your surfaces are mapped, your inventory is live, and your sponsors are in frame.
             </p>
 
             <div className="flex flex-col">
-              {FEATURES.map((f, i) => (
+              {FEATURES.map((f) => (
                 <div
                   key={f.label}
-                  className="reveal-text feature-row flex items-start gap-4 py-4 cursor-default"
+                  className="feature-row flex items-start gap-4 py-4 cursor-default"
+                  style={{ borderBottom: "1px solid rgba(0,0,0,0.07)" }}
                 >
-                  <div className="feature-dot mt-1.5 w-2 h-2 rounded-full bg-bright-green/50 shrink-0" />
+                  <div className="feature-dot mt-1.5 w-2 h-2 rounded-full shrink-0" style={{ background: "rgba(232,25,44,0.45)" }} />
                   <div>
-                    <p className="font-sans text-sm font-bold text-white mb-0.5">{f.label}</p>
-                    <p className="font-sans text-xs text-white/45 leading-relaxed">{f.desc}</p>
+                    <p className="font-sans text-sm font-bold mb-0.5" style={{ color: "#0d0d0d" }}>{f.label}</p>
+                    <p className="font-sans text-xs leading-relaxed" style={{ color: "rgba(13,13,13,0.45)" }}>{f.desc}</p>
                   </div>
                 </div>
               ))}
             </div>
 
-            <div className="reveal-text">
+            <div>
               <a href="#join" className="inline-flex items-center gap-3 group">
-                <span className="font-sans text-sm font-semibold text-bright-green group-hover:text-light-green transition-colors">
+                <span className="font-sans text-sm font-semibold transition-colors" style={{ color: "#e8192c" }}>
                   Talk to our team
                 </span>
                 <span
-                  className="h-px bg-bright-green/50 transition-all duration-400 group-hover:w-10 group-hover:bg-bright-green"
-                  style={{ width: "24px" }}
+                  className="h-px transition-all duration-300 group-hover:w-10"
+                  style={{ width: "24px", background: "#e8192c", opacity: 0.5, display: "block" }}
                 />
               </a>
             </div>

@@ -9,11 +9,31 @@ const SUBJECT_OPTIONS = [
   { value: "other", label: "Other" },
 ];
 
-const inputClass =
-  "w-full px-5 py-4 rounded-full font-sans text-black bg-white border border-black/10 placeholder:text-black/40 focus:outline-none focus:ring-2 focus:ring-bright-green transition-shadow";
+const inputStyle = {
+  width: "100%",
+  padding: "14px 20px",
+  borderRadius: "9999px",
+  fontFamily: "sans-serif",
+  fontSize: "0.9rem",
+  color: "#0d0d0d",
+  background: "#fff",
+  border: "1px solid rgba(13,13,13,0.12)",
+  outline: "none",
+};
 
-const textareaClass =
-  "w-full px-5 py-4 rounded-2xl font-sans text-black bg-white border border-black/10 placeholder:text-black/40 focus:outline-none focus:ring-2 focus:ring-bright-green transition-shadow min-h-[160px] resize-y";
+const textareaStyle = {
+  width: "100%",
+  padding: "14px 20px",
+  borderRadius: "16px",
+  fontFamily: "sans-serif",
+  fontSize: "0.9rem",
+  color: "#0d0d0d",
+  background: "#fff",
+  border: "1px solid rgba(13,13,13,0.12)",
+  outline: "none",
+  minHeight: "160px",
+  resize: "vertical",
+};
 
 export default function MemberFormSection() {
   const [name, setName] = useState("");
@@ -25,36 +45,47 @@ export default function MemberFormSection() {
   const [consent, setConsent] = useState(false);
 
   return (
-    <section id="join" className="mx-auto">
-      <div className="bg-white p-8 sm:p-12 lg:p-16">
+    <section id="join" style={{ background: "#f2f2f0" }}>
+      <div className="p-8 sm:p-12 lg:p-16">
         <div className="max-w-xl mx-auto">
-          <h2 className="font-sans text-3xl sm:text-4xl font-bold text-black text-center">
-            Start a{" "}
-            <span className="font-serif italic text-dark-green">conversation</span>{" "}
-            with Courtlay
+          <p className="font-sans text-[10px] tracking-[0.3em] uppercase text-center mb-3" style={{ color: "#e8192c" }}>
+            Get in touch
+          </p>
+          <h2
+            className="font-sans font-bold text-center"
+            style={{
+              fontFamily: "'Barlow Condensed', sans-serif",
+              fontSize: "clamp(1.8rem, 3.5vw, 2.8rem)",
+              fontWeight: 900,
+              textTransform: "uppercase",
+              color: "#0d0d0d",
+            }}
+          >
+            Start a conversation{" "}
+            <span style={{ color: "#e8192c" }}>with Courtlay</span>
           </h2>
-          <p className="mt-3 text-black/80 text-base sm:text-lg text-center">
+          <p className="mt-3 text-base sm:text-lg text-center" style={{ color: "rgba(13,13,13,0.5)" }}>
             Share a few details and we&apos;ll follow up about how Courtlay can work with your broadcasts.
           </p>
 
           <form className="mt-10 space-y-6" onSubmit={(e) => e.preventDefault()}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <input type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} className={inputClass} />
-              <input type="text" placeholder="Company" value={company} onChange={(e) => setCompany(e.target.value)} className={inputClass} />
-              <input type="email" required placeholder="Email*" value={email} onChange={(e) => setEmail(e.target.value)} className={inputClass} />
+              <input type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} style={inputStyle} />
+              <input type="text" placeholder="Company" value={company} onChange={(e) => setCompany(e.target.value)} style={inputStyle} />
+              <input type="email" required placeholder="Email*" value={email} onChange={(e) => setEmail(e.target.value)} style={inputStyle} />
               <div className="relative">
                 <select
                   value={subject}
                   onChange={(e) => setSubject(e.target.value)}
-                  className={`${inputClass} appearance-none cursor-pointer pr-12`}
+                  style={{ ...inputStyle, appearance: "none", cursor: "pointer", paddingRight: "48px" }}
                 >
                   {SUBJECT_OPTIONS.map(({ value, label }) => (
                     <option key={value} value={value}>{label}</option>
                   ))}
                 </select>
-                <ChevronDown className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 size-5 text-black/40" aria-hidden="true" />
+                <ChevronDown className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 size-5" style={{ color: "rgba(13,13,13,0.4)" }} aria-hidden="true" />
               </div>
-              <input type="tel" required placeholder="Phone*" value={phone} onChange={(e) => setPhone(e.target.value)} className={inputClass} />
+              <input type="tel" required placeholder="Phone*" value={phone} onChange={(e) => setPhone(e.target.value)} style={inputStyle} />
             </div>
 
             <textarea
@@ -63,7 +94,7 @@ export default function MemberFormSection() {
               placeholder="Your Message*"
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              className={textareaClass}
+              style={textareaStyle}
             />
 
             <label className="flex items-start gap-3 cursor-pointer select-none">
@@ -72,11 +103,12 @@ export default function MemberFormSection() {
                 required
                 checked={consent}
                 onChange={(e) => setConsent(e.target.checked)}
-                className="mt-1 size-4 shrink-0 rounded border border-black/20 accent-bright-green"
+                className="mt-1 size-4 shrink-0 rounded"
+                style={{ accentColor: "#e8192c" }}
               />
-              <span className="font-sans text-sm text-black/70 leading-snug text-left">
+              <span className="font-sans text-sm leading-snug text-left" style={{ color: "rgba(13,13,13,0.6)" }}>
                 By using this form you agree with the storage and handling of your data in accordance with the{" "}
-                <a href="/privacy-policy" className="text-bright-green font-medium hover:underline underline-offset-2">
+                <a href="/privacy-policy" className="font-medium hover:underline underline-offset-2" style={{ color: "#e8192c" }}>
                   Privacy and Cookie Policy
                 </a>.
               </span>
@@ -84,7 +116,8 @@ export default function MemberFormSection() {
 
             <button
               type="submit"
-              className="w-full py-4 rounded-full bg-bright-green text-black font-sans font-semibold text-base hover:bg-bg-pale transition-colors"
+              className="w-full py-4 rounded-full font-sans font-semibold text-base transition-opacity hover:opacity-85"
+              style={{ background: "#e8192c", color: "#fff" }}
             >
               Send
             </button>

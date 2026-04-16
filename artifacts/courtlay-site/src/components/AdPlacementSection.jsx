@@ -1,226 +1,195 @@
-import { useState } from "react";
-import { IMAGES } from "../constants";
-import GridBackground from "./GridBackground";
+import { useState, useEffect, useRef, useCallback } from "react";
 
-const ZONES = [
-  {
-    id: "glass-facades",
-    label: "Glass Facades",
-    badge: "GLASS FACADES",
-    description:
-      "Primary marquee virtual boards rendered directly onto the glass sidelines and rear wall — maximum visibility across every camera angle.",
-    image: IMAGES.skeletonPadel,
-  },
-  {
-    id: "court-base",
-    label: "Court Base",
-    badge: "COURT BASE",
-    description:
-      "Court base band — full-width branding strip running across the baseline. Highly visible during play and replays.",
-    image: IMAGES.skeletonPadel,
-  },
-  {
-    id: "side-panels",
-    label: "Side Panels",
-    badge: "SIDE PANELS",
-    description:
-      "Lateral surface zones positioned along the sidelines, ideal for sponsor logos that stay in frame throughout rallies.",
-    image: IMAGES.skeletonPadel,
-  },
-  {
-    id: "base-corners",
-    label: "Base Corners",
-    badge: "BASE CORNERS",
-    description:
-      "Corner ad placements at the base of the court — subtly reinforcing brand presence without disrupting the field of play.",
-    image: IMAGES.skeletonPadel,
-  },
-  {
-    id: "mesh-net",
-    label: "Mesh & Net",
-    badge: "MESH & NET",
-    description:
-      "Secondary logo bands rendered across mesh fencing and net bands — clearly visible on camera without competing with play.",
-    image: IMAGES.skeletonPadel,
-  },
-  {
-    id: "rear-wall",
-    label: "Rear Wall",
-    badge: "REAR WALL",
-    description:
-      "Full rear-wall surface for high-impact branding — the dominant visual backdrop for baseline camera shots.",
-    image: IMAGES.skeletonPadel,
-  },
+const IMAGES = [
+  "/website_frames/center_court_overlay.jpg",
+  "/website_frames/front_wall_overlay.jpg",
+  "/website_frames/side_walls_overlay.jpg",
+  "/website_frames/sidelines_overlay.jpg",
+  "/website_frames/sponsorship_overlay.jpg",
 ];
 
-const FEATURES = [
-  {
-    title: "Glass facades",
-    description:
-      "Primary marquee virtual boards along sidelines and baseline.",
-  },
-  {
-    title: "Mesh & structure",
-    description:
-      "Secondary logo bands that read clearly on camera without competing with play.",
-  },
-  {
-    title: "Surface & net band",
-    description:
-      "Restrained in-venue marks tied to replays and key moments.",
-  },
-];
+const AUTO_INTERVAL = 4000;
 
 export default function AdPlacementSection() {
-  const [activeId, setActiveId] = useState(ZONES[1].id);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [direction, setDirection] = useState(1); // 1 = forward, -1 = backward
+  const timerRef = useRef(null);
 
-  const activeZone = ZONES.find((z) => z.id === activeId) ?? ZONES[0];
-  const activeIndex = ZONES.findIndex((z) => z.id === activeId);
+  const goTo = useCallback((index) => {
+    setDirection(index >= activeIndex ? 1 : -1);
+    setActiveIndex(index);
+  }, [activeIndex]);
+
+  const resetTimer = useCallback(() => {
+    if (timerRef.current) clearInterval(timerRef.current);
+    timerRef.current = setInterval(() => {
+      setDirection(1);
+      setActiveIndex((prev) => (prev + 1) % IMAGES.length);
+    }, AUTO_INTERVAL);
+  }, []);
+
+  useEffect(() => {
+    resetTimer();
+    return () => clearInterval(timerRef.current);
+  }, [resetTimer]);
+
+  const handleDotClick = (index) => {
+    goTo(index);
+    resetTimer();
+  };
 
   return (
     <section
       id="solutions"
-      className="mx-auto bg-black overflow-hidden relative"
+      style={{ background: "#f2f2f0" }}
+      className="w-full overflow-hidden"
     >
-      <GridBackground />
-      <div className="relative z-10 px-4 py-12 sm:px-6 sm:py-16 lg:px-16 lg:py-20 max-w-7xl mx-auto">
+      {/* ── Section header ── */}
+      <div className="px-6 sm:px-10 lg:px-16 pt-16 pb-8 max-w-7xl mx-auto">
+        <p
+          className="font-sans text-xs font-bold tracking-[0.22em] uppercase mb-3"
+          style={{ color: "#e8192c" }}
+        >
+          Ad Placement
+        </p>
+        <h2
+          style={{
+            fontFamily: "'Barlow Condensed', sans-serif",
+            fontSize: "clamp(2rem, 4vw, 3.5rem)",
+            fontWeight: 900,
+            lineHeight: 1,
+            color: "#0d0d0d",
+            letterSpacing: "-0.01em",
+            textTransform: "uppercase",
+          }}
+        >
+          Every Surface of the Court,{" "}
+          <span style={{ color: "#e8192c" }}>Monetised</span>
+        </h2>
+        <p
+          className="mt-3 font-sans text-base max-w-2xl"
+          style={{ color: "rgba(13,13,13,0.5)", lineHeight: 1.7 }}
+        >
+          Turn dead court space into live revenue. Every surface, precision-mapped and switchable — per region, per sponsor, per moment.
+        </p>
+      </div>
 
-        {/* Heading */}
-        <div className="mb-10 sm:mb-12 lg:mb-14">
-          <h2 className="font-sans text-3xl sm:text-4xl lg:text-5xl font-bold text-white">
-            Ad{" "}
-            <span className="text-bright-green font-serif italic">placement</span>
-          </h2>
-          <p className="mt-2 sm:mt-3 font-sans text-muted text-base sm:text-lg max-w-2xl">
-            Every surface of the court, mapped and ready for virtual brand integration.
-          </p>
-        </div>
-
-        {/* Main interactive panel */}
-        <div className="grid grid-cols-1 lg:grid-cols-[340px_1fr] gap-4 sm:gap-5">
-
-          {/* Left — zone list */}
-          <div className="flex flex-col gap-2 order-2 lg:order-1">
-            {ZONES.map((zone) => {
-              const isActive = zone.id === activeId;
-              return (
-                <button
-                  key={zone.id}
-                  type="button"
-                  onClick={() => setActiveId(zone.id)}
-                  className={`
-                    w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left transition-all duration-200
-                    ${isActive
-                      ? "bg-bright-green/10 border border-bright-green/40"
-                      : "bg-white/[0.04] border border-white/[0.07] hover:bg-white/[0.07] hover:border-white/15"
-                    }
-                  `}
-                >
-                  {/* Thumbnail */}
-                  <div
-                    className={`
-                      shrink-0 w-14 h-10 rounded-lg overflow-hidden border
-                      ${isActive ? "border-bright-green/40" : "border-white/10"}
-                    `}
-                  >
-                    <img
-                      src={zone.image}
-                      alt={zone.label}
-                      className="w-full h-full object-cover object-center"
-                    />
-                  </div>
-
-                  {/* Label */}
-                  <div className="flex-1 min-w-0">
-                    <p
-                      className={`font-sans text-sm font-semibold leading-snug truncate ${
-                        isActive ? "text-white" : "text-white/80"
-                      }`}
-                    >
-                      {zone.label}
-                    </p>
-                    <p
-                      className={`font-sans text-[11px] mt-0.5 ${
-                        isActive ? "text-bright-green" : "text-white/35"
-                      }`}
-                    >
-                      {isActive ? "Active zone" : "Click to preview"}
-                    </p>
-                  </div>
-
-                  {/* Active indicator */}
-                  {isActive && (
-                    <div className="shrink-0 w-1.5 h-1.5 rounded-full bg-bright-green" />
-                  )}
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Right — preview + description */}
-          <div className="flex flex-col gap-4 order-1 lg:order-2">
-            {/* Court image */}
-            <div className="relative rounded-2xl overflow-hidden border border-white/10 bg-zinc-950/80 shadow-xl">
-              <img
-                key={activeId}
-                src={activeZone.image}
-                alt={activeZone.label}
-                className="w-full h-auto object-contain transition-opacity duration-300"
-              />
-              {/* Zone highlight overlay label */}
-              <div className="absolute top-4 left-4">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-bright-green text-black font-sans text-[10px] font-bold tracking-[0.15em] uppercase">
-                  {activeZone.badge}
-                </span>
-              </div>
-            </div>
-
-            {/* Description + dot nav */}
-            <div className="bg-white/[0.04] border border-white/[0.07] rounded-2xl px-5 py-4 sm:px-6 sm:py-5">
-              <p className="font-sans text-white/90 text-sm sm:text-base leading-relaxed">
-                {activeZone.description}
-              </p>
-              {/* Dot navigation */}
-              <div className="flex items-center gap-1.5 mt-4">
-                {ZONES.map((zone, i) => (
-                  <button
-                    key={zone.id}
-                    type="button"
-                    onClick={() => setActiveId(zone.id)}
-                    aria-label={zone.label}
-                    className={`rounded-full transition-all duration-200 ${
-                      i === activeIndex
-                        ? "w-5 h-1.5 bg-bright-green"
-                        : "w-1.5 h-1.5 bg-white/20 hover:bg-white/40"
-                    }`}
-                  />
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Feature cards row */}
-        <div className="mt-6 sm:mt-8 grid grid-cols-1 sm:grid-cols-3 gap-4">
-          {FEATURES.map((feature) => (
+      {/* ── Image slider: 80% width, centered ── */}
+      <div
+        className="relative mx-auto overflow-hidden"
+        style={{
+          width: "80%",
+          height: "72vh",
+          minHeight: "460px",
+          borderRadius: "12px",
+          boxShadow: "0 24px 80px rgba(0,0,0,0.18)",
+        }}
+      >
+        {/* Sliding track — all images side by side */}
+        <div
+          style={{
+            display: "flex",
+            height: "100%",
+            width: `${IMAGES.length * 100}%`,
+            transform: `translateX(-${(activeIndex * 100) / IMAGES.length}%)`,
+            transition: "transform 0.55s cubic-bezier(0.77,0,0.18,1)",
+          }}
+        >
+          {IMAGES.map((src, i) => (
             <div
-              key={feature.title}
-              className="bg-white/[0.04] border border-white/[0.07] rounded-2xl px-5 py-5 sm:px-6 sm:py-6 flex flex-col gap-3"
+              key={src}
+              style={{
+                width: `${100 / IMAGES.length}%`,
+                height: "100%",
+                flexShrink: 0,
+              }}
             >
-              <div className="flex items-center gap-2.5">
-                <span className="w-2 h-2 rounded-full bg-bright-green shrink-0" />
-                <h4 className="font-sans text-sm sm:text-base font-bold text-white">
-                  {feature.title}
-                </h4>
-              </div>
-              <p className="font-sans text-white/55 text-xs sm:text-sm leading-relaxed">
-                {feature.description}
-              </p>
+              <img
+                src={src}
+                alt={`Court overlay ${i + 1}`}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  display: "block",
+                }}
+              />
             </div>
           ))}
         </div>
 
+        {/* Bottom gradient for dot contrast */}
+        <div
+          className="absolute inset-x-0 bottom-0 h-20 pointer-events-none"
+          style={{
+            background: "linear-gradient(to top, rgba(0,0,0,0.45) 0%, transparent 100%)",
+          }}
+        />
+
+        {/* ── Dot selector — center right ── */}
+        <div
+          className="absolute right-5 top-1/2 flex flex-col items-center gap-3"
+          style={{ transform: "translateY(-50%)" }}
+        >
+          {IMAGES.map((_, i) => {
+            const isActive = i === activeIndex;
+            return (
+              <button
+                key={i}
+                onClick={() => handleDotClick(i)}
+                aria-label={`Go to image ${i + 1}`}
+                style={{
+                  width: isActive ? "10px" : "7px",
+                  height: isActive ? "10px" : "7px",
+                  borderRadius: "9999px",
+                  background: isActive ? "#e8192c" : "rgba(255,255,255,0.55)",
+                  border: isActive
+                    ? "2px solid rgba(255,255,255,0.85)"
+                    : "1.5px solid rgba(255,255,255,0.25)",
+                  boxShadow: isActive ? "0 0 10px rgba(232,25,44,0.7)" : "none",
+                  transition: "all 0.2s ease",
+                  cursor: "pointer",
+                  padding: 0,
+                  flexShrink: 0,
+                }}
+              />
+            );
+          })}
+
+          {/* Timer progress bar */}
+          <div
+            style={{
+              width: "2px",
+              height: "36px",
+              background: "rgba(255,255,255,0.15)",
+              borderRadius: "9999px",
+              overflow: "hidden",
+              marginTop: "4px",
+            }}
+          >
+            <div
+              key={activeIndex}
+              style={{
+                width: "100%",
+                height: "100%",
+                background: "#e8192c",
+                transformOrigin: "top",
+                animation: `fillDown ${AUTO_INTERVAL}ms linear forwards`,
+              }}
+            />
+          </div>
+        </div>
       </div>
+
+      {/* Bottom spacing */}
+      <div style={{ paddingBottom: "4rem" }} />
+
+      <style>{`
+        @keyframes fillDown {
+          from { transform: scaleY(0); }
+          to   { transform: scaleY(1); }
+        }
+      `}</style>
     </section>
   );
 }

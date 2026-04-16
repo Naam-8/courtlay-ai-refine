@@ -1,16 +1,13 @@
-import { useEffect, useRef } from "react";
-import BeforeAfterSlider from "./BeforeAfterSlider";
+import { useEffect } from "react";
 
 const STATS = [
-  { val: "6", label: "Sports" },
-  { val: "Live", label: "Integration" },
-  { val: "360°", label: "Court surface" },
+  { val: "6",          label: "Sports" },
+  { val: "Live",       label: "Integration" },
+  { val: "360°",       label: "Court surface" },
   { val: "Multi-feed", label: "Regional splits" },
 ];
 
 export default function HeroSection() {
-  const headRef = useRef(null);
-
   useEffect(() => {
     const id = "hero-keyframes";
     if (!document.getElementById(id)) {
@@ -18,73 +15,138 @@ export default function HeroSection() {
       s.id = id;
       s.textContent = `
         @keyframes hero-fade-up {
-          from { opacity: 0; transform: translateY(28px); }
+          from { opacity: 0; transform: translateY(32px); }
           to   { opacity: 1; transform: translateY(0); }
         }
-        @keyframes hero-line-in {
-          from { scaleX: 0; opacity: 0; }
-          to   { scaleX: 1; opacity: 1; }
+        .hero-el { opacity: 0; animation: hero-fade-up 0.9s cubic-bezier(0.22,1,0.36,1) forwards; }
+        .hero-el-1 { animation-delay: 0.1s; }
+        .hero-el-2 { animation-delay: 0.25s; }
+        .hero-el-3 { animation-delay: 0.40s; }
+        .hero-el-4 { animation-delay: 0.55s; }
+        .hero-el-5 { animation-delay: 0.70s; }
+        @keyframes live-pulse {
+          0%,100% { opacity: 1; }
+          50%      { opacity: 0.35; }
         }
-        .hero-el { opacity: 0; animation: hero-fade-up 0.8s cubic-bezier(0.22,1,0.36,1) forwards; }
-        .hero-el-1 { animation-delay: 0.05s; }
-        .hero-el-2 { animation-delay: 0.18s; }
-        .hero-el-3 { animation-delay: 0.30s; }
-        .hero-el-4 { animation-delay: 0.44s; }
-        .hero-el-5 { animation-delay: 0.58s; }
-        @keyframes badge-pulse {
-          0%,100% { box-shadow: 0 0 0 0 rgba(255,107,107,0.4); }
-          50% { box-shadow: 0 0 0 6px rgba(255,107,107,0); }
-        }
-        .live-dot { animation: badge-pulse 2s ease-in-out infinite; border-radius: 50%; }
+        .live-dot { animation: live-pulse 2s ease-in-out infinite; }
       `;
       document.head.appendChild(s);
     }
   }, []);
 
   return (
-    <section id="home" className="pt-8 sm:pt-12 lg:pt-16">
+    <section
+      id="home"
+      className="relative w-full overflow-hidden"
+      style={{ minHeight: "100svh" }}
+    >
+      {/* ── Video background ── */}
+      <video
+        className="absolute inset-0 w-full h-full object-cover"
+        src="/hero-video.mp4"
+        autoPlay
+        loop
+        muted
+        playsInline
+        aria-hidden="true"
+      />
 
-      {/* Desktop layout */}
-      <div className="hidden md:block">
-        {/* Above-slider headline */}
-        <div className="mb-6 flex items-end justify-between gap-6">
-          <h1
-            ref={headRef}
-            className="hero-el hero-el-1 font-sans font-bold text-white leading-[1.0] tracking-tight"
-            style={{ fontSize: "clamp(2.4rem, 5vw, 4.2rem)" }}
+      {/* ── Gradient overlay: dark at bottom-left for text legibility ── */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            "linear-gradient(135deg, rgba(0,0,0,0.80) 0%, rgba(0,0,0,0.55) 45%, rgba(0,0,0,0.25) 100%)",
+        }}
+      />
+      {/* bottom fade for smooth section transition */}
+      <div
+        className="absolute inset-x-0 bottom-0 h-40 pointer-events-none"
+        style={{
+          background:
+            "linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(242,242,240,0.95) 100%)",
+        }}
+      />
+
+      {/* ── Content ── */}
+      <div className="relative z-10 flex flex-col justify-end h-full min-h-[100svh] px-6 pb-16 sm:px-10 lg:px-16 lg:pb-20" style={{ paddingBottom: "6rem" }}>
+
+        {/* Eyebrow badge */}
+        <div className="hero-el hero-el-1 mb-5 flex items-center gap-2">
+          <span
+            className="live-dot inline-block w-2 h-2 rounded-full bg-brand"
+            style={{ backgroundColor: "#e8192c" }}
+          />
+          <span
+            className="font-sans text-[11px] tracking-[0.22em] uppercase font-semibold"
+            style={{ color: "rgba(255,255,255,0.6)" }}
           >
-            Smarter racquet sport
-            <br />
-            <span className="text-bright-green">broadcasts</span>
-          </h1>
-          <div className="hero-el hero-el-2 shrink-0 flex flex-col items-end gap-2 pb-1">
-            <p className="font-serif italic text-white/55 text-lg leading-snug text-right max-w-xs">
-              Virtual ads, built for the court.
-            </p>
-            <div className="flex items-center gap-2">
-              <span className="live-dot w-2 h-2 bg-bright-green inline-block" />
-              <span className="font-sans text-[10px] tracking-[0.22em] uppercase text-white/35">Live integration ready</span>
-            </div>
-          </div>
+            Live Integration Ready
+          </span>
         </div>
 
-        {/* Slider */}
-        <div className="hero-el hero-el-3 relative aspect-video w-full rounded-2xl overflow-hidden border border-bright-green/30 shadow-[0_0_60px_rgba(255,107,107,0.2)]">
-          <BeforeAfterSlider />
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
-        </div>
+        {/* Main headline */}
+        <h1
+          className="hero-el hero-el-2 font-display text-white"
+          style={{
+            fontFamily: "'Barlow Condensed', sans-serif",
+            fontWeight: 800,
+            textTransform: "uppercase",
+            lineHeight: 0.95,
+            letterSpacing: "-0.01em",
+            fontSize: "clamp(2rem, 5.5vw, 5rem)",
+            marginBottom: "2.5rem",
+          }}
+        >
+          <span style={{ color: "#e8192c" }}>AI-Powered</span> Virtual
+          <br />
+          Overlays for{" "}
+          <span style={{ color: "#e8192c" }}>Media</span>
+          <br />
+          Rights Holders
+        </h1>
+
+        {/* Sub-headline */}
+        <p
+          className="hero-el hero-el-3 mt-5 font-sans text-white/60 max-w-lg"
+          style={{ fontSize: "clamp(0.95rem, 1.6vw, 1.2rem)", lineHeight: 1.6 }}
+        >
+          Seamlessly integrate sponsor brands into any racquet sport broadcast — live, frame-accurate, and built for global media rights holders.
+        </p>
 
         {/* CTAs */}
-        <div className="hero-el hero-el-4 mt-6 flex items-center gap-4">
+        <div className="hero-el hero-el-4 mt-8 flex flex-wrap items-center gap-4">
           <a
             href="#join"
-            className="inline-flex items-center justify-center px-8 py-3 rounded-full bg-bright-green text-black font-sans font-bold text-sm hover:bg-light-green transition-colors"
+            className="inline-flex items-center justify-center font-sans font-bold text-sm tracking-widest uppercase transition-all duration-200 hover:opacity-90"
+            style={{
+              background: "#e8192c",
+              color: "#fff",
+              padding: "14px 32px",
+              borderRadius: "4px",
+              letterSpacing: "0.12em",
+            }}
           >
             Talk to our team
           </a>
           <a
             href="#solutions"
-            className="inline-flex items-center gap-2 font-sans text-sm font-medium text-white/55 hover:text-white transition-colors"
+            className="inline-flex items-center gap-2 font-sans font-semibold text-sm tracking-wide transition-colors duration-200"
+            style={{
+              color: "rgba(255,255,255,0.7)",
+              border: "1px solid rgba(255,255,255,0.25)",
+              padding: "13px 28px",
+              borderRadius: "4px",
+              letterSpacing: "0.06em",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.color = "#fff";
+              e.currentTarget.style.borderColor = "rgba(255,255,255,0.6)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.color = "rgba(255,255,255,0.7)";
+              e.currentTarget.style.borderColor = "rgba(255,255,255,0.25)";
+            }}
           >
             Explore the platform
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
@@ -94,52 +156,34 @@ export default function HeroSection() {
         </div>
 
         {/* Stats strip */}
-        <div className="hero-el hero-el-5 mt-10 pt-8 border-t border-white/[0.08] grid grid-cols-4 gap-6">
+        <div
+          className="hero-el hero-el-5 mt-12 pt-8 grid grid-cols-2 sm:grid-cols-4 gap-6"
+          style={{ borderTop: "1px solid rgba(255,255,255,0.12)" }}
+        >
           {STATS.map(({ val, label }) => (
-            <div key={label} className="flex flex-col gap-0.5">
-              <p className="font-sans text-xl sm:text-2xl font-bold text-white">{val}</p>
-              <p className="font-sans text-[10px] tracking-[0.2em] uppercase text-white/35">{label}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Mobile layout */}
-      <div className="block md:hidden">
-        <h1 className="hero-el hero-el-1 font-sans text-4xl font-bold text-white leading-[1.05] tracking-tight">
-          Smarter racquet
-          <br />
-          sport{" "}
-          <span className="text-bright-green">broadcasts</span>
-        </h1>
-        <p className="hero-el hero-el-2 mt-3 font-serif text-white/55 text-base italic max-w-xs">
-          Virtual ads, built for the court.
-        </p>
-
-        <div className="hero-el hero-el-3 mt-5 flex flex-col gap-3">
-          <a
-            href="#join"
-            className="inline-flex items-center justify-center px-7 py-3 rounded-full bg-bright-green text-black font-sans font-bold text-sm hover:bg-light-green transition-colors"
-          >
-            Talk to our team
-          </a>
-          <a
-            href="#solutions"
-            className="inline-flex items-center justify-center gap-2 px-7 py-3 rounded-full border border-white/20 text-white font-sans font-medium text-sm hover:border-bright-green/50 transition-colors"
-          >
-            Explore the platform
-          </a>
-        </div>
-
-        <div className="hero-el hero-el-4 mt-6 relative aspect-video w-full rounded-2xl overflow-hidden border border-bright-green/30 shadow-[0_0_30px_rgba(255,107,107,0.15)]">
-          <BeforeAfterSlider />
-        </div>
-
-        <div className="hero-el hero-el-5 mt-8 grid grid-cols-2 gap-4">
-          {STATS.map(({ val, label }) => (
-            <div key={label} className="flex flex-col gap-0.5">
-              <p className="font-sans text-xl font-bold text-white">{val}</p>
-              <p className="font-sans text-[10px] tracking-[0.18em] uppercase text-white/35">{label}</p>
+            <div key={label} className="flex flex-col gap-1">
+              <p
+                className="font-display text-white"
+                style={{
+                  fontFamily: "'Barlow Condensed', sans-serif",
+                  fontWeight: 700,
+                  textTransform: "uppercase",
+                  fontSize: "clamp(1.6rem, 3vw, 2.4rem)",
+                  lineHeight: 1,
+                }}
+              >
+                {val}
+              </p>
+              <p
+                className="font-sans uppercase font-semibold"
+                style={{
+                  fontSize: "0.65rem",
+                  letterSpacing: "0.18em",
+                  color: "rgba(255,255,255,0.45)",
+                }}
+              >
+                {label}
+              </p>
             </div>
           ))}
         </div>

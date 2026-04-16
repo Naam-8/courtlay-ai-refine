@@ -1,105 +1,182 @@
-import { useEffect, useRef } from "react";
-import GridBackground from "./GridBackground";
-import { IMAGES } from "../constants";
+import { useRef, useState, useCallback, useEffect } from "react";
+
+const ORIGINAL = "/website_frames/comparision/comparision.jpg";
+const OVERLAY  = "/website_frames/comparision/comparision_overlay.jpg";
 
 export default function VirtualAdsSection() {
-  const sectionRef = useRef(null);
+  const containerRef = useRef(null);
+  const [sliderPct, setSliderPct] = useState(50); // 0–100
+  const [dragging, setDragging] = useState(false);
 
-  useEffect(() => {
-    const id = "va-keyframes";
-    if (!document.getElementById(id)) {
-      const s = document.createElement("style");
-      s.id = id;
-      s.textContent = `
-        @keyframes va-reveal {
-          from { opacity: 0; transform: translateY(24px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
-        .va-el { opacity: 0; }
-        .va-el.animated { animation: va-reveal 0.7s cubic-bezier(0.22,1,0.36,1) forwards; }
-        .va-card {
-          transition: box-shadow 0.35s ease, transform 0.35s ease;
-        }
-        .va-card:hover { transform: translateY(-4px); }
-      `;
-      document.head.appendChild(s);
-    }
-    const obs = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.querySelectorAll(".va-el").forEach((el, i) => {
-            el.style.animationDelay = `${i * 0.1}s`;
-            el.classList.add("animated");
-          });
-          obs.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.1 });
-    if (sectionRef.current) obs.observe(sectionRef.current);
-    return () => obs.disconnect();
+  const calcPct = useCallback((clientX) => {
+    const rect = containerRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    const pct = ((clientX - rect.left) / rect.width) * 100;
+    setSliderPct(Math.min(98, Math.max(2, pct)));
   }, []);
 
+  // Mouse
+  const onMouseDown = (e) => { e.preventDefault(); setDragging(true); calcPct(e.clientX); };
+  const onMouseMove = useCallback((e) => { if (dragging) calcPct(e.clientX); }, [dragging, calcPct]);
+  const onMouseUp   = useCallback(() => setDragging(false), []);
+
+  // Touch
+  const onTouchStart = (e) => { setDragging(true); calcPct(e.touches[0].clientX); };
+  const onTouchMove  = useCallback((e) => { if (dragging) calcPct(e.touches[0].clientX); }, [dragging, calcPct]);
+  const onTouchEnd   = useCallback(() => setDragging(false), []);
+
+  useEffect(() => {
+    if (dragging) {
+      window.addEventListener("mousemove", onMouseMove);
+      window.addEventListener("mouseup", onMouseUp);
+      window.addEventListener("touchmove", onTouchMove, { passive: true });
+      window.addEventListener("touchend", onTouchEnd);
+    }
+    return () => {
+      window.removeEventListener("mousemove", onMouseMove);
+      window.removeEventListener("mouseup", onMouseUp);
+      window.removeEventListener("touchmove", onTouchMove);
+      window.removeEventListener("touchend", onTouchEnd);
+    };
+  }, [dragging, onMouseMove, onMouseUp, onTouchMove, onTouchEnd]);
+
   return (
-    <section id="virtual-ads" className="bg-black overflow-hidden relative">
-      <GridBackground />
-      <div ref={sectionRef} className="relative z-10 px-4 py-16 sm:px-6 sm:py-20 lg:px-16 lg:py-28 max-w-7xl mx-auto">
+    <section id="virtual-ads" style={{ background: "#f2f2f0" }} className="w-full overflow-hidden">
 
-        {/* Header */}
-        <div className="va-el max-w-2xl mx-auto text-center mb-16 sm:mb-20">
-          <p className="font-sans text-[10px] tracking-[0.3em] uppercase text-bright-green/60 mb-4">Side by side</p>
-          <h2 className="font-sans text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-[1.1]">
-            How{" "}
-            <span className="font-serif italic text-bright-green">Courtlay</span>{" "}
-            works
-          </h2>
-          <p className="mt-5 font-sans text-sm sm:text-base text-white/45 leading-relaxed max-w-xl mx-auto">
-            Compare the original live broadcast with Courtlay's brand-integrated feed — sponsor assets blended natively into the court surface.
-          </p>
-        </div>
+      {/* ── Section header ── */}
+      <div className="px-6 sm:px-10 lg:px-16 pt-16 pb-8 max-w-7xl mx-auto">
+        <p
+          className="font-sans text-xs font-bold tracking-[0.22em] uppercase mb-3"
+          style={{ color: "#e8192c" }}
+        >
+          Before & After
+        </p>
+        <h2
+          style={{
+            fontFamily: "'Barlow Condensed', sans-serif",
+            fontSize: "clamp(2rem, 4vw, 3.5rem)",
+            fontWeight: 900,
+            lineHeight: 1,
+            color: "#0d0d0d",
+            letterSpacing: "-0.01em",
+            textTransform: "uppercase",
+          }}
+        >
+          See the Difference,{" "}
+          <span style={{ color: "#e8192c" }}>Live</span>
+        </h2>
+        <p
+          className="mt-3 font-sans text-base max-w-2xl"
+          style={{ color: "rgba(13,13,13,0.5)", lineHeight: 1.7 }}
+        >
+          Drag the slider to compare the original broadcast feed with Courtlay's
+          brand-integrated virtual overlay — frame-accurate and seamless.
+        </p>
+      </div>
 
-        {/* Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 items-start">
+      {/* ── Comparison slider ── */}
+      <div className="px-6 sm:px-10 lg:px-16 pb-16 max-w-7xl mx-auto">
+        <div
+          ref={containerRef}
+          className="relative w-full overflow-hidden select-none"
+          style={{
+            borderRadius: "12px",
+            boxShadow: "0 24px 80px rgba(0,0,0,0.18)",
+            cursor: dragging ? "grabbing" : "col-resize",
+            aspectRatio: "16/9",
+          }}
+          onMouseDown={onMouseDown}
+          onTouchStart={onTouchStart}
+        >
 
-          {/* Original */}
-          <div className="va-el va-card relative aspect-video rounded-2xl overflow-hidden border border-white/10 bg-black shadow-xl">
-            <img className="h-full w-full object-cover opacity-85" src={IMAGES.compWithoutAd} alt="Original broadcast" />
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20" />
-            <div className="absolute top-4 left-4">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full font-sans text-[10px] font-bold tracking-[0.14em] uppercase bg-white/10 text-white/70 backdrop-blur-sm border border-white/10">
-                <span className="w-1.5 h-1.5 rounded-full bg-white/50" />
-                Original broadcast
-              </span>
-            </div>
-            <div className="absolute bottom-4 left-4 right-4">
-              <p className="font-sans text-xs text-white/40">Live feed — no virtual ads</p>
-            </div>
+          {/* ── Original image — full size, always visible underneath ── */}
+          <img
+            src={ORIGINAL}
+            alt="Original broadcast"
+            className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+            draggable={false}
+          />
+
+          {/* ── Overlay image — clipped to show only right side of wiper ── */}
+          <img
+            src={OVERLAY}
+            alt="With Courtlay virtual overlay"
+            className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+            style={{ clipPath: `inset(0 0 0 ${sliderPct}%)` }}
+            draggable={false}
+          />
+
+          {/* ── Divider line ── */}
+          <div
+            className="absolute top-0 bottom-0 w-[2px] pointer-events-none"
+            style={{ left: `${sliderPct}%`, background: "#fff", boxShadow: "0 0 12px rgba(0,0,0,0.5)" }}
+          />
+
+          {/* ── Drag handle ── */}
+          <div
+            className="absolute top-1/2 flex items-center justify-center"
+            style={{
+              left: `${sliderPct}%`,
+              transform: "translate(-50%, -50%)",
+              width: "44px",
+              height: "44px",
+              borderRadius: "50%",
+              background: "#fff",
+              boxShadow: "0 4px 20px rgba(0,0,0,0.35)",
+              cursor: dragging ? "grabbing" : "grab",
+              zIndex: 10,
+              transition: dragging ? "none" : "box-shadow 0.2s ease",
+            }}
+            onMouseDown={onMouseDown}
+            onTouchStart={onTouchStart}
+          >
+            {/* Arrow icons */}
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M7 10l-4 0M7 10l-2.5-2.5M7 10l-2.5 2.5" stroke="#0d0d0d" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M13 10l4 0M13 10l2.5-2.5M13 10l2.5 2.5" stroke="#0d0d0d" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
           </div>
 
-          {/* Courtlay feed */}
-          <div className="va-el va-card relative aspect-video rounded-2xl overflow-hidden border border-bright-green/35 bg-bright-green/5 shadow-[0_0_50px_rgba(255,107,107,0.2)]">
-            <img className="h-full w-full object-cover" src={IMAGES.compWithAd} alt="Courtlay virtual feed" />
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/10" />
-            <div className="absolute top-4 left-4">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full font-sans text-[10px] font-bold tracking-[0.14em] uppercase bg-bright-green text-black backdrop-blur-sm">
-                <span className="w-1.5 h-1.5 rounded-full bg-black/40" style={{ animation: "badge-pulse 2s ease-in-out infinite", borderRadius: "50%" }} />
-                Courtlay virtual feed
-              </span>
-            </div>
-            <div className="absolute bottom-4 left-4 right-4">
-              <p className="font-sans text-xs text-white/60">Brand-integrated · Synchronized to play</p>
-            </div>
+          {/* ── Labels ── */}
+          {/* Original label */}
+          <div className="absolute top-4 left-4" style={{ zIndex: 5, pointerEvents: "none" }}>
+            <span
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full font-sans text-[10px] font-bold tracking-[0.14em] uppercase"
+              style={{ background: "rgba(0,0,0,0.55)", backdropFilter: "blur(8px)", border: "1px solid rgba(255,255,255,0.12)", color: "rgba(255,255,255,0.75)" }}
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-white/50 inline-block" />
+              Original
+            </span>
+          </div>
+
+          {/* Overlay label */}
+          <div className="absolute top-4 right-4" style={{ zIndex: 5, pointerEvents: "none" }}>
+            <span
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full font-sans text-[10px] font-bold tracking-[0.14em] uppercase"
+              style={{ background: "#e8192c", color: "#fff", backdropFilter: "blur(8px)" }}
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-white/60 inline-block" style={{ animation: "livePulse 2s ease-in-out infinite" }} />
+              Courtlay Overlay
+            </span>
           </div>
         </div>
 
         {/* Bottom note */}
-        <div className="va-el mt-10 flex items-center justify-center gap-3">
-          <div className="h-px flex-1 max-w-24 bg-white/10" />
-          <p className="font-sans text-[11px] tracking-[0.2em] uppercase text-white/25 text-center">
+        <div className="mt-6 flex items-center justify-center gap-3">
+          <div className="h-px flex-1 max-w-24" style={{ background: "rgba(13,13,13,0.12)" }} />
+          <p className="font-sans text-[11px] tracking-[0.2em] uppercase text-center" style={{ color: "rgba(13,13,13,0.35)" }}>
             Zero disruption to the live production workflow
           </p>
-          <div className="h-px flex-1 max-w-24 bg-white/10" />
+          <div className="h-px flex-1 max-w-24" style={{ background: "rgba(13,13,13,0.12)" }} />
         </div>
       </div>
+
+      <style>{`
+        @keyframes livePulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.3; }
+        }
+      `}</style>
     </section>
   );
 }

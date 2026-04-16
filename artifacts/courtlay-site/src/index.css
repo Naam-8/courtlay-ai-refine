@@ -1,24 +1,47 @@
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Manrope:wght@300;400;500;600;700;800&family=Instrument+Serif:ital@0;1&display=swap');
 @import "tailwindcss";
 @import "tw-animate-css";
 
 @theme {
-  --color-bright-green: #e8192c;
-  --color-light-green: #ff5566;
-  --color-dark-green: #6b0010;
-  --color-white: #ffffff;
-  --color-black: #000000;
-  --color-muted: #cccccc;
-  --color-bg-pale: #ff5566;
+  /* Brand */
+  --color-brand:        #e8192c;
+  --color-brand-hover:  #c8101f;
+  --color-brand-light:  #ff4d5e;
 
-  --font-sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
-  --font-serif: "Instrument Serif", ui-serif, Georgia, serif;
+  /* Light palette */
+  --color-surface:      #f2f2f0;       /* main page bg */
+  --color-surface-2:    #e8e8e6;       /* subtle card bg */
+  --color-border:       rgba(0,0,0,0.08);
+
+  /* Text */
+  --color-ink:          #0f0f0f;       /* primary text */
+  --color-ink-2:        #444444;       /* secondary text */
+  --color-ink-3:        #888888;       /* muted text */
+
+  /* Hero (dark) */
+  --color-hero-overlay-from: rgba(0,0,0,0.72);
+  --color-hero-overlay-to:   rgba(0,0,0,0.35);
+
+  /* Legacy compat */
+  --color-bright-green: #e8192c;
+  --color-light-green:  #ff4d5e;
+  --color-dark-green:   #6b0010;
+  --color-white:        #ffffff;
+  --color-black:        #0f0f0f;
+  --color-muted:        #888888;
+  --color-bg-pale:      #f2f2f0;
+
+  /* Fonts */
+  --font-display: "Barlow Condensed", ui-sans-serif, system-ui, sans-serif;
+  --font-sans:    "Manrope", ui-sans-serif, system-ui, sans-serif;
+  --font-serif:   "Instrument Serif", ui-serif, Georgia, serif;
 }
 
 /* ── Base ── */
 html {
   font-family: var(--font-sans);
-  color: var(--color-white);
-  background-color: var(--color-black);
+  color: var(--color-ink);
+  background-color: var(--color-surface);
   scroll-behavior: smooth;
   scroll-padding-top: 5rem;
   overscroll-behavior: none;
@@ -27,8 +50,17 @@ html {
   text-rendering: optimizeLegibility;
 }
 
-@media (min-width: 640px) { html { scroll-padding-top: 5.5rem; } }
+@media (min-width: 640px)  { html { scroll-padding-top: 5.5rem; } }
 @media (min-width: 1024px) { html { scroll-padding-top: 6rem; } }
+
+/* ── Display heading utility ── */
+.font-display {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  line-height: 0.95;
+}
 
 /* ── Custom cursor — desktop only ── */
 @media (pointer: fine) {
@@ -38,7 +70,7 @@ html {
     position: fixed;
     top: 0; left: 0;
     width: 8px; height: 8px;
-    background: #ff6b6b;
+    background: #e8192c;
     border-radius: 50%;
     pointer-events: none;
     z-index: 99999;
@@ -51,7 +83,7 @@ html {
     position: fixed;
     top: 0; left: 0;
     width: 36px; height: 36px;
-    border: 1.5px solid rgba(255, 107, 107, 0.55);
+    border: 1.5px solid rgba(232,25,44,0.5);
     border-radius: 50%;
     pointer-events: none;
     z-index: 99998;
@@ -63,7 +95,7 @@ html {
   .cursor-ring--hover {
     width: 54px;
     height: 54px;
-    border-color: rgba(255, 107, 107, 0.9);
+    border-color: rgba(232,25,44,0.9);
     margin-left: -9px;
     margin-top: -9px;
   }
@@ -71,18 +103,25 @@ html {
 
 /* ── Selection ── */
 ::selection {
-  background: #ff6b6b;
-  color: #000;
+  background: #e8192c;
+  color: #fff;
 }
 
 /* ── Scrollbar ── */
 ::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: #000; }
-::-webkit-scrollbar-thumb { background: rgba(255,107,107,0.3); border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(255,107,107,0.6); }
+::-webkit-scrollbar-track { background: var(--color-surface); }
+::-webkit-scrollbar-thumb { background: rgba(232,25,44,0.3); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(232,25,44,0.6); }
 
 /* ── Badge pulse ── */
 @keyframes badge-pulse {
-  0%,100% { box-shadow: 0 0 0 0 rgba(255,107,107,0.4); }
-  50% { box-shadow: 0 0 0 5px rgba(255,107,107,0); }
+  0%,100% { box-shadow: 0 0 0 0 rgba(232,25,44,0.4); }
+  50%      { box-shadow: 0 0 0 5px rgba(232,25,44,0); }
+}
+
+/* ── Section divider (diagonal SVG) ── */
+.section-divider {
+  display: block;
+  overflow: hidden;
+  line-height: 0;
 }

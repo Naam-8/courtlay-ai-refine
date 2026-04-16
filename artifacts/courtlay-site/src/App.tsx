@@ -19,26 +19,20 @@ import CtaSection from "./components/CtaSection";
 import MemberFormSection from "./components/MemberFormSection";
 // @ts-ignore
 import Footer from "./components/Footer";
-// @ts-ignore
-import GridBackground from "./components/GridBackground";
 
 export default function App() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
   return (
-    <div className="mx-auto min-h-screen">
+    <div
+      className="mx-auto min-h-screen"
+      style={{ background: "#f2f2f0", overflowX: "hidden" }}
+    >
       <CustomCursor />
-      <Header
-        mobileMenuOpen={mobileMenuOpen}
-        setMobileMenuOpen={setMobileMenuOpen}
-      />
-      <div id="home" className="bg-black overflow-hidden relative">
-        <GridBackground />
-        <div className="relative z-10 px-6 pb-6 sm:px-10 sm:pb-8 lg:px-16 lg:pb-12">
-          <HeroSection />
-        </div>
-      </div>
+      <Header />
 
+      {/* Hero: full-bleed video */}
+      <HeroSection />
+
+      {/* Content sections */}
       <AdPlacementSection />
       <SportsCoverageSection />
       <VirtualAdsSection />
@@ -49,3 +43,4 @@ export default function App() {
     </div>
   );
 }
+

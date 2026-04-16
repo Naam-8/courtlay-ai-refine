@@ -10,6 +10,7 @@ out-tsc
 
 # dependencies
 node_modules
+**/node_modules/
 
 # IDEs and editors
 /.idea
@@ -36,6 +37,30 @@ npm-debug.log
 yarn-error.log
 testem.log
 /typings
+*.log
+
+# environment files (keep only explicit examples)
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+# build/cache artifacts from nested workspaces
+**/dist/
+**/.turbo/
+**/.cache/
+**/.vite/
+**/.next/
+**/.nuxt/
+**/coverage/
+**/*.tsbuildinfo
+
+# local/raw asset dumps (use curated assets under app public/)
+/attached_assets/
+/clip/
+/logo/
+/website_frames/
+*.zip
 
 # System Files
 .DS_Store
